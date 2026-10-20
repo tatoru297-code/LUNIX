@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LUNIX · Realidad Virtual</title>
+  <link rel="stylesheet" href="fuente.css">
+<link rel="stylesheet" href="style.css">
+  <!-- A-Frame (motor de realidad virtual). Está incluido en la carpeta libs -->
+  <script src="libs/aframe.min.js"></script>
+    <link rel="icon" type="image/png" href="../ASSETS/Imagenes/xandro.png">
+</head>
+<body>
+
+  <!-- ===== PANTALLA DE INICIO ===== -->
+  <div id="inicio">
+    <img class="retrato" data-xandro alt="Xandro">
+    <h1>LUN<span>I</span>X</h1>
+    <p>Un universo de conocimiento en realidad virtual. Xandro será tu guía.</p>
+    <button id="btnEntrar">Entrar al universo</button>
+    <small>
+      Computador: WASD para moverte, arrastra el mouse para mirar y haz clic en los planetas.<br>
+      Celular: gira el teléfono y toca los planetas.<br>
+      Gafas VR: usa el botón de las gafas (abajo a la derecha). Palanca izquierda = moverte, derecha = girar.
+    </small>
+  </div>
+
+  <!-- ===== BARRA SUPERIOR (solo en pantalla normal) ===== -->
+  <div id="hud">
+    <div class="marca">LUNIX <span>VR</span></div>
+    <button id="btnRecorrido">▶ Recorrido</button>
+    <button id="btnInicio">⟲ Inicio</button>
+    <button id="btnVoz" title="Activar o silenciar la voz de Xandro">🔊</button>
+  </div>
+
+  <!-- ===== CHAT 2D CON XANDRO ===== -->
+  <button id="btnChat">💬 Hablar con Xandro</button>
+  <div id="chat" class="oculto">
+    <div class="chat-cab">
+      <b class="nombre"><img class="mini" data-xandro alt="">Xandro · LUNIX</b>
+      <button id="cerrarChat" title="Cerrar">✕</button>
+    </div>
+    <div id="mensajes"></div>
+    <form id="formChat">
+      <input type="text" id="entradaChat" placeholder="Escribe tu pregunta..." autocomplete="off" required>
+      <button type="button" id="btnMic" title="Hablarle a Xandro">🎤</button>
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <!-- ===== ESCENA DE REALIDAD VIRTUAL ===== -->
+  <a-scene id="escena"
+           renderer="antialias: true"
+           vr-mode-ui="enabled: true"
+           loading-screen="enabled: false"
+           background="color: #000004">
+
+    <!-- Estrellas del fondo -->
+    <a-entity campo-estelar></a-entity>
+
+    <!-- Luz ambiental suave -->
+    <a-entity light="type: ambient; color: #8e96c8; intensity: 0.7"></a-entity>
+
+    <!-- Estrella central de LUNIX: la estrella de Xandro (y la luz del sistema).
+         Su aspecto y sus animaciones las crea estrella.js -->
+    <a-entity id="sol" position="0 2.5 0" estrella-viva="radio: 1.9">
+      <a-entity light="type: point; color: #ffe2a8; intensity: 2.2; distance: 0; decay: 0"></a-entity>
+    </a-entity>
+
+    <!-- Aquí el script crea los planetas -->
+    <a-entity id="sistema" position="0 2.5 0"></a-entity>
+
+    <!-- Panel de información de un planeta (lo maneja el script) -->
+    <a-entity id="panelInfo" mirar-camara visible="false"></a-entity>
+
+    <!-- ===== XANDRO: el asistente que te acompaña ===== -->
+    <a-entity id="xandro" companero mirar-camara scale="0.7 0.7 0.7" position="0.7 1.5 12">
+      <!-- Xandro 3D: lo construye y anima xandro3d.js -->
+      <a-entity avatar-xandro></a-entity>
+      <!-- la burbuja de texto y los botones se crean desde script.js -->
+    </a-entity>
+
+    <!-- ===== EL VISITANTE: cámara + manos ===== -->
+    <a-entity id="rig" navegante vr-locomocion position="0 0 14">
+      <a-entity id="camara" camera look-controls
+                wasd-controls="fly: true; acceleration: 30"
+                position="0 1.6 0"></a-entity>
+      <a-entity id="manoIzq" laser-controls="hand: left"
+                raycaster="objects: .clickable; far: 80"></a-entity>
+      <a-entity id="manoDer" laser-controls="hand: right"
+                raycaster="objects: .clickable; far: 80"></a-entity>
+    </a-entity>
+
+    <!-- Puntero del mouse / dedo -->
+    <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable; far: 80"></a-entity>
+  </a-scene>
+
+  <script src="xandro-img.js"></script>
+  <script src="dibujos.js"></script>
+  <script src="estrella.js"></script>
+  <script src="script.js"></script>
+  <script src="xandro3d.js"></script>
+</body>
+</html>
